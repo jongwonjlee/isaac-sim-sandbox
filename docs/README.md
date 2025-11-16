@@ -9,6 +9,13 @@ Specifically, this sandbox:
 - Commands the robot using the ROS2 `cmd_vel` topic.
 - Publishes the robot's odometry (odom -> base_link, where the odom frame represents the robot's starting pose) along with tf (World -> base_link -> camera) and RGB-D camera data using ROS2 topics.
 
+## Structure
+- `assets/`: Contains asset files such as STL models and universal scene description (USD) files for the objects and robot used in the simulation. 
+- `ros/`: Contains a ROS2 launch file and a RViz configuration file.
+- `sim/`: Contains a USD scene file.
+- `docs/`: Contains documentation files, including this README.
+- `deprecated/`: Contains deprecated or obsolete files, including standalone Python scripts for launching simulations, ROS2 nodes, or WebRTC streaming commands.
+
 ## Getting Started
 
 ### Prerequisites
