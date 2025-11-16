@@ -64,7 +64,7 @@ This will launch
 
 The TurtleBot3 Burger robot should begin moving in a circular trajectory while publishing RGB-D camera data and tf information to ROS2 topics.
 
-![Demo](docs/demo.gif)
+![Demo](demo.gif)
 
 
 ## References
