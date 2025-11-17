@@ -5,7 +5,7 @@ Author: Jongwon Lee (jongwonjlee@gmail.com)
 This repository shows how to load a custom world and robot model in Isaac Sim while integrating with ROS2 for robot control, sensor measurement, and state estimation visualization.
 
 Specifically, this sandbox:
-- Opens a custom scene in a simple indoor room with three objects of different colors and light properties (e.g., opacity, reflectivity, metallic properties, etc.) — a bunny, an Eiffel Tower, and a cube — along with a custom robot model (TurtleBot3 Burger) equipped with an RGB-D camera, all placed in the scene.
+- Opens a custom scene in a simple indoor room with several objects of different colors and light properties (e.g., opacity, reflectivity, metallic properties, etc.) — a bunny, two Eiffel Towers, and two cubes — along with a custom robot model (TurtleBot3 Burger) equipped with an RGB-D camera, all placed in the scene.
 - Commands the robot using the ROS2 `cmd_vel` topic.
 - Publishes the robot's odometry (odom -> base_link, where the odom frame represents the robot's starting pose) along with tf (World -> base_link -> camera) and RGB-D camera data using ROS2 topics.
 
