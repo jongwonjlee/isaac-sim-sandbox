@@ -16,18 +16,6 @@
 import numpy as np
 from isaacsim import SimulationApp
 
-# CONFIG = {
-#     "livestream": True,
-#     "width": 1280,
-#     "height": 720,
-#     "window_width": 1920,
-#     "window_height": 1080,
-#     "headless": False,       # 렌더링/스트리밍 켜기
-#     "hide_ui": True,         # [필수] 로컬 GUI 창 시도 끄기
-#     "renderer": "RaytracedLighting",
-#     "display_options": 3286,
-# }
-
 simulation_app = SimulationApp({"headless": True})
 
 import omni.usd
