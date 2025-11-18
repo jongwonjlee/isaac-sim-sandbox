@@ -58,10 +58,10 @@ dynamic_cube = DynamicCuboid(
     color=np.array([0, 255, 255]),
 )
 
-# start a world to step simulator
+# Start a world to step simulator
 my_world = World(stage_units_in_meters=1.0)
 
-# start the simulator
+# Start the simulator
 for i in range(3):
     my_world.reset()
     print("simulator running", i)

@@ -37,7 +37,7 @@ simulation_app.set_setting("/app/window/drawMouse", True)
 # Enable Livestream extension
 enable_extension("omni.services.livestream.nvcf")
 
-# 3. Import ROS 2 and Isaac Sim modules
+# Import ROS 2 and Isaac Sim modules
 import rclpy
 from std_msgs.msg import String
 import time
@@ -81,7 +81,7 @@ while simulation_app._app.is_running() and not simulation_app.is_exiting():
     my_world.step(render=True)
     rclpy.spin_once(node, timeout_sec=0)
 
-    # 6. Publish ROS 2 message every second
+    # Publish ROS 2 message every second
     if count % 60 == 0:  # Publish message every 60 steps (approximately 1 second if step rate is 60 Hz)
         msg.data = f"Hello from Isaac Sim! Step: {count}"
         publisher.publish(msg)
