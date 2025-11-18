@@ -37,19 +37,19 @@ CONFIG = {
 
 
 # Start the omniverse application
-kit = SimulationApp(launch_config=CONFIG)
+simulation_app = SimulationApp(launch_config=CONFIG)
 
 from isaacsim.core.utils.extensions import enable_extension
 
 # Default Livestream settings
-kit.set_setting("/app/window/drawMouse", True)
+simulation_app.set_setting("/app/window/drawMouse", True)
 
 # Enable Livestream extension
 enable_extension("omni.services.livestream.nvcf")
 
 # Run until closed
-while kit._app.is_running() and not kit.is_exiting():
+while simulation_app._app.is_running() and not simulation_app.is_exiting():
     # Run in realtime mode, we don't specify the step size
-    kit.update()
+    simulation_app.update()
 
-kit.close()
+simulation_app.close()
