@@ -44,15 +44,14 @@ class ImagePublisherNode(Node):
 
     def set_image(self, frame, seconds):
         # Publish camera image
-        self.msg = Image()
+        self.msg = CvBridge().cv2_to_imgmsg(frame, encoding="rgba8")
         self.msg.header.stamp = rclpy.time.Time(seconds=seconds).to_msg()
         self.msg.header.frame_id = "camera_frame"
         self.msg.height = frame.shape[0]
         self.msg.width = frame.shape[1]
         self.msg.encoding = "rgba8"
-        self.msg = CvBridge().cv2_to_imgmsg(frame, encoding="rgba8")
 
-class TFPublisherNode(rclpy.node.Node):
+class TFPublisherNode(Node):
     def __init__(self):
         super().__init__('tf_publisher_node')
         self.publisher_ = self.create_publisher(TFMessage, '/tf', 10)
@@ -140,21 +139,21 @@ def main():
                         prim_path="/World/Bunny",
     )
     bunny_prim = XFormPrim(prim_path="/World/Bunny", name="Bunny_XForm")
-    bunny_prim.set_world_pose(position=np.array([1.0, 0.0, 0.0]))
+    bunny_prim.set_world_pose(position=np.array([0.0, 1.0, -0.1]))
     bunny_prim.set_local_scale(scale=np.array([0.01, 0.01, 0.01]))
 
     add_reference_to_stage(usd_path="../assets/eiffel_tower.usd", 
                         prim_path="/World/Tower",
     )
     tower_prim = XFormPrim(prim_path="/World/Tower", name="Tower_XForm")
-    tower_prim.set_world_pose(position=np.array([-1.0, 0.0, 0.0]))
+    tower_prim.set_world_pose(position=np.array([0.0, 0.0, 0.0]))
     tower_prim.set_local_scale(scale=np.array([0.01, 0.01, 0.01]))
 
     add_reference_to_stage(usd_path="../assets/menger_sponge.usd",
                         prim_path="/World/Sponge",
     )
     sponge_prim = XFormPrim(prim_path="/World/Sponge", name="Sponge_XForm")
-    sponge_prim.set_world_pose(position=np.array([0.0, 0.0, 0.0]))
+    sponge_prim.set_world_pose(position=np.array([0.0, -1.0, 0.1]))
     sponge_prim.set_local_scale(scale=np.array([0.1, 0.1, 0.1]))
 
     print("--- Scene Initialized ---")
@@ -182,7 +181,7 @@ def main():
     camera_path = "/World/Camera"
     cam =  Camera(prim_path=camera_path, 
                 name="Camera", 
-                translation=np.array([0.0, -3.0, 1.0]), 
+                translation=np.array([-7.0, 0.0, 0.5]), 
                 orientation=np.array([1.0, 0.0, 0.0, 0.0]),
                 frequency=30.0,
                 resolution=(1280, 720),              
@@ -199,13 +198,17 @@ def main():
     camera_publisher_node = ImagePublisherNode()
     tf_publisher_node = TFPublisherNode()
 
-    rclpy.spin(camera_publisher_node)
-    rclpy.spin(tf_publisher_node)
+    executor = rclpy.executors.SingleThreadedExecutor()
+    executor.add_node(camera_publisher_node)
+    executor.add_node(tf_publisher_node)
 
     print("--- ROS 2 Publisher Initialized (Topic: /camera/image_raw, /tf) ---")
 
-    # Enable Livestream extension
+    # Enable Livestream and ROS 2 bridge extensions
     enable_extension("omni.services.livestream.nvcf")
+    enable_extension("omni.isaac.ros2_bridge")
+
+    print("--- Livestream and ROS 2 Bridge Extensions Enabled ---")
 
     # Start the simulator and run until closed
     try:
@@ -214,6 +217,9 @@ def main():
             world.step(render=True)  # stepping through the simulation
             # Run in realtime mode, we don't specify the step size
             simulation_app.update()
+            
+            # Executor spin once to handle ROS 2 callbacks
+            executor.spin_once(timeout_sec=0)
             
             frame = cam.get_current_frame()['rgba'].astype(np.uint8) # rendering_time (float), rendering_frame (int), 'rgba' (np.ndarray)
             camera_pose = cam.get_world_pose()  # position (np.ndarray), orientation (np.ndarray), with leading quaternion w
